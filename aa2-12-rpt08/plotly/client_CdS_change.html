@@ -15,7 +15,7 @@
 <h1 align="center"> Real-time Luminosity(lux) from CdS sensor with Gauge </h1>
 <!-- Lux gauge -->
 <div align="center">
-    
+    <canvas id='gauge'></canvas>
 </div>
 
 <h3 align="center"> on Time: <span id="time"> </span> </h3> 
@@ -51,9 +51,11 @@
             dtda[0]=msg[0];
             dtda[1] = parseInt(msg[1]); 
 
-            // when new data is coming, keep on streaming data           
+            if(dtda[1] != preX) {
+                preX = dtda[1]// when new data is coming, keep on streaming data           
             ctime.innerHTML = dtda[0];
                  // Add lux gauge
+            gauge_lux.setValue(dtda[1]);
 
             //nextPt();                                
             tArray = tArray.concat(dtda[0]);  // time
@@ -67,7 +69,7 @@
             }
 
             Plotly.update(streamPlot, update);
-
+            }
         });
     }); 
 
@@ -116,15 +118,15 @@
 
     // gauge configuration  
     var gauge_lux = new Gauge({
-        renderTo    : '',
+        renderTo    : 'gauge',
         width       : 300,
         height      : 300,
         glow        : true,
-        units       : '',
-        valueFormat : { int : , dec :  },
+        units       : 'lux',
+        valueFormat : { int : 2, dec : 0 },
         title       : "Luminosity",
         minValue    : 0,
-        maxValue    : ,  // new
+        maxValue    : 500,  // new
         majorTicks  : ['0','100','200','300','400','500'],
         minorTicks  : 10,
         strokeTicks : false,
@@ -146,7 +148,7 @@
         }
     });
 
-    //gauge_lux.draw();
+    gauge_lux.draw();
 
   </script>
 </body>
